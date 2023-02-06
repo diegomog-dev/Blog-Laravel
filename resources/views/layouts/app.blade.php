@@ -7,15 +7,20 @@
     <title>@yield('title')</title>
     <!-- favicon -->
     <!-- estilos -->
+    <style>
+        .active{
+            color: red;
+            font-weight: bold;
+        }
+    </style>
     <!--<script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>-->
 </head>
 <body>
-    <!-- header -->
-    <!-- nav -->
+    @include('layouts.partials.header')
 
     @yield('content')
 
-    <!-- footer -->
+    @include('layouts.partials.footer')
     <!-- script -->
 </body>
 </html>
