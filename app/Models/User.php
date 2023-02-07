@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-
-// Atributo para realizar mutadores para modificar la info que se guarda en la BD
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use HasProfilePhoto;
+    use Notifiable;
+    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -34,6 +37,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_recovery_codes',
+        'two_factor_secret',
     ];
 
     /**
@@ -45,20 +50,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected function name():Attribute{
-        return new Attribute(
-            get: function($value){
-                return ucwords($value);
-            },
-            set: fn($value)=> strtolower($value) // Se puede ahorrar código utilizando funciones flecha
-        );
-    }
-
-    // En anteriores proyectos de laravel 8 se realizaban los mutadores y accesores así:
-    /*public function getNameAttribute($value){
-        return ucwords($value);
-    }
-    public function setNameAttirbute($value){
-        $this->attributes['name'] = strtolower($value);
-    }*/
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'profile_photo_url',
+    ];
 }
